@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Tracker — Mockup</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --border: #e3e8ee;
+      --text: #1f2933;
+      --muted: #6b7280;
+      --green: #1f9d55;
+      --amber: #d97706;
+      --red: #dc2626;
+      --accent: #2563eb;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px 20px 64px;
+    }
+
+    header.topbar {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    header.topbar h1 { font-size: 22px; margin: 0; font-weight: 700; }
+    header.topbar .sub { color: var(--muted); font-size: 13px; }
+    header.topbar a { color: var(--muted); text-decoration: none; font-size: 13px; }
+    header.topbar a:hover { text-decoration: underline; }
+
+    .section { margin-top: 28px; }
+    .section h2 { font-size: 15px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 0 0 12px; }
+
+    /* KPI strip */
+    .kpi-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .kpi-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .kpi-card .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+    .kpi-card .value { font-size: 26px; font-weight: 700; margin-top: 6px; }
+    .kpi-card .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    /* Card / table */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+    th { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; background: #fafbfc; }
+    tr:last-child td { border-bottom: none; }
+    tbody tr { cursor: pointer; }
+    tbody tr:hover { background: #f9fafb; }
+
+    /* Health */
+    .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+    .dot.green { background: var(--green); }
+    .dot.amber { background: var(--amber); }
+    .dot.red { background: var(--red); }
+
+    /* Burn bar */
+    .burn { background: #eef1f5; border-radius: 6px; height: 10px; width: 140px; overflow: hidden; display: inline-block; }
+    .burn > span { display: block; height: 100%; border-radius: 6px; }
+    .burn .green { background: var(--green); }
+    .burn .amber { background: var(--amber); }
+    .burn .red { background: var(--red); }
+
+    /* Chips */
+    .chip { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+    .chip.missing { background: #fef2f2; color: var(--red); }
+    .chip.overdue { background: #fff7ed; color: var(--amber); }
+    .chip.pending { background: #eff6ff; color: var(--accent); }
+    .chip.ok { background: #ecfdf5; color: var(--green); }
+
+    /* Revenue chart */
+    .revchart { display: flex; align-items: flex-end; gap: 18px; height: 200px; padding: 16px; }
+    .revbar { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+    .revbar .bars { display: flex; align-items: flex-end; gap: 4px; height: 150px; }
+    .revbar .bars > span { width: 18px; border-radius: 4px 4px 0 0; }
+    .revbar .bars .rec { background: var(--accent); }
+    .revbar .bars .inv { background: var(--green); }
+    .revbar .month { font-size: 12px; color: var(--muted); }
+
+    .legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); padding: 0 16px 12px; }
+    .legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: middle; }
+
+    .muted { color: var(--muted); }
+    .right { text-align: right; }
+
+    /* Drawer */
+    .drawer-backdrop {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, .35);
+      display: flex; justify-content: flex-end; z-index: 50;
+    }
+    .drawer-backdrop.hidden { display: none; }
+    .drawer {
+      width: min(560px, 100%); height: 100vh; background: var(--card);
+      padding: 24px; overflow-y: auto; box-shadow: -4px 0 16px rgba(0,0,0,.12);
+    }
+    .drawer header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .drawer header h3 { margin: 0; }
+    .drawer header button { border: none; background: none; font-size: 22px; cursor: pointer; color: var(--muted); }
+    .drawer header button:hover { color: var(--text); }
+    .delta { font-size: 12px; }
+    .delta-up { color: var(--green); }
+    .delta-down { color: var(--red); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="topbar">
+      <div>
+        <h1>Project Tracker</h1>
+        <div class="sub">Budget vs. hours · revenue recognition · invoicing gaps</div>
+      </div>
+      <a class="sub" href="#">Sign out</a>
+    </header>
+
+    <!-- KPI Strip -->
+    <div class="kpi-strip">
+      <div class="kpi-card">
+        <div class="label">Active projects</div>
+        <div class="value">4</div>
+        <div class="hint">in execution</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">Hours actual / budget</div>
+        <div class="value">1,242h</div>
+        <div class="hint">of 2,000h budgeted</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">Recognized this month</div>
+        <div class="value">$169,700</div>
+        <div class="hint">% completion basis</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">Uninvoiced gap</div>
+        <div class="value">$89,700</div>
+        <div class="hint">recognized − invoiced</div>
+      </div>
+    </div>
+
+    <!-- Projects Table -->
+    <section class="section">
+      <h2>Projects</h2>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Hours burn</th>
+              <th class="right">Recognized</th>
+              <th class="right">Gap</th>
+              <th>Invoicing</th>
+              <th>Health</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr onclick="showTrend()">
+              <td>
+                <div><strong>Acme Data Platform</strong></div>
+                <div class="muted" style="font-size: 12px;">deal #1001</div>
+              </td>
+              <td>
+                <div class="burn"><span class="green" style="width: 65%;"></span></div>
+                <div class="muted" style="font-size: 12px;">520h / 800h</div>
+              </td>
+              <td class="right">$72,000</td>
+              <td class="right">$32,000</td>
+              <td><span class="chip pending">pending</span></td>
+              <td><span class="dot green" title="green"></span></td>
+            </tr>
+            <tr onclick="showTrend()">
+              <td>
+                <div><strong>Globex Mobile App</strong></div>
+                <div class="muted" style="font-size: 12px;">deal #1002</div>
+              </td>
+              <td>
+                <div class="burn"><span class="amber" style="width: 93%;"></span></div>
+                <div class="muted" style="font-size: 12px;">372h / 400h</div>
+              </td>
+              <td class="right">$51,200</td>
+              <td class="right">$21,200</td>
+              <td><span class="chip pending">pending</span></td>
+              <td><span class="dot amber" title="amber"></span></td>
+            </tr>
+            <tr onclick="showTrend()">
+              <td>
+                <div><strong>Initech BI Dashboards</strong></div>
+                <div class="muted" style="font-size: 12px;">deal #1003</div>
+              </td>
+              <td>
+                <div class="burn"><span class="red" style="width: 100%;"></span></div>
+                <div class="muted" style="font-size: 12px;">230h / 200h</div>
+              </td>
+              <td class="right">$28,500</td>
+              <td class="right">$28,500</td>
+              <td><span class="chip missing">missing</span></td>
+              <td><span class="dot red" title="red"></span></td>
+            </tr>
+            <tr onclick="showTrend()">
+              <td>
+                <div><strong>Umbrella Cloud Migration</strong></div>
+                <div class="muted" style="font-size: 12px;">deal #1004</div>
+              </td>
+              <td>
+                <div class="burn"><span class="green" style="width: 20%;"></span></div>
+                <div class="muted" style="font-size: 12px;">120h / 600h</div>
+              </td>
+              <td class="right">$18,000</td>
+              <td class="right">$8,000</td>
+              <td><span class="chip pending">pending</span></td>
+              <td><span class="dot green" title="green"></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Revenue Chart -->
+    <section class="section">
+      <h2>Monthly revenue recognition</h2>
+      <div class="card">
+        <div class="legend">
+          <span><span class="sw" style="background: var(--accent);"></span>Recognized</span>
+          <span><span class="sw" style="background: var(--green);"></span>Invoiced</span>
+        </div>
+        <div class="revchart">
+          <div class="revbar">
+            <div class="bars">
+              <span class="rec" style="height: 100%;"></span>
+              <span class="inv" style="height: 47%;"></span>
+            </div>
+            <div class="month">May</div>
+          </div>
+          <div class="revbar">
+            <div class="bars">
+              <span class="rec" style="height: 98%;"></span>
+              <span class="inv" style="height: 45%;"></span>
+            </div>
+            <div class="month">June</div>
+          </div>
+          <div class="revbar">
+            <div class="bars">
+              <span class="rec" style="height: 100%;"></span>
+              <span class="inv" style="height: 52%;"></span>
+            </div>
+            <div class="month">July</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Exceptions List -->
+    <section class="section">
+      <h2>Invoicing exceptions</h2>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Type</th>
+              <th class="right">Recognized</th>
+              <th class="right">Invoiced</th>
+              <th class="right">Gap</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div><strong>Initech BI Dashboards</strong></div>
+                <div class="muted" style="font-size: 12px;">deal #1003</div>
+              </td>
+              <td><span class="chip missing">missing</span></td>
+              <td class="right">$28,500</td>
+              <td class="right">$0</td>
+              <td class="right"><strong>$28,500</strong></td>
+            </tr>
+            <tr>
+              <td>
+                <div><strong>Acme Data Platform</strong></div>
+                <div class="muted" style="font-size: 12px;">deal #1001</div>
+              </td>
+              <td><span class="chip pending">pending</span></td>
+              <td class="right">$72,000</td>
+              <td class="right">$40,000</td>
+              <td class="right"><strong>$32,000</strong></td>
+            </tr>
+            <tr>
+              <td>
+                <div><strong>Globex Mobile App</strong></div>
+                <div class="muted" style="font-size: 12px;">deal #1002</div>
+              </td>
+              <td><span class="chip pending">pending</span></td>
+              <td class="right">$51,200</td>
+              <td class="right">$30,000</td>
+              <td class="right"><strong>$21,200</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- Week-over-week drawer (hidden by default) -->
+  <div class="drawer-backdrop hidden" id="drawer" onclick="closeTrend()">
+    <div class="drawer" onclick="event.stopPropagation()">
+      <header>
+        <div>
+          <h3 style="margin: 0;">Acme Data Platform</h3>
+          <div class="muted" style="font-size: 12px;">deal #1001 · week over week</div>
+        </div>
+        <button onclick="closeTrend()" aria-label="Close">×</button>
+      </header>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Week</th>
+            <th class="right">Hours</th>
+            <th class="right">Δ hrs</th>
+            <th class="right">% done</th>
+            <th class="right">Δ %</th>
+            <th class="right">Gap</th>
+            <th>Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>May 18</td>
+            <td class="right">395h</td>
+            <td class="right"><span class="delta">—</span></td>
+            <td class="right">45%</td>
+            <td class="right"><span class="delta">—</span></td>
+            <td class="right">$32,000</td>
+            <td><span class="dot green"></span></td>
+          </tr>
+          <tr>
+            <td>May 25</td>
+            <td class="right">458h</td>
+            <td class="right"><span class="delta delta-up">▲ 62.4h</span></td>
+            <td class="right">52%</td>
+            <td class="right"><span class="delta delta-up">▲ 7.2%</span></td>
+            <td class="right">$32,000</td>
+            <td><span class="dot green"></span></td>
+          </tr>
+          <tr>
+            <td>Jun 1</td>
+            <td class="right">520h</td>
+            <td class="right"><span class="delta delta-up">▲ 62.4h</span></td>
+            <td class="right">60%</td>
+            <td class="right"><span class="delta delta-up">▲ 7.2%</span></td>
+            <td class="right">$32,000</td>
+            <td><span class="dot green"></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    function showTrend() {
+      document.getElementById('drawer').classList.remove('hidden');
+    }
+    function closeTrend() {
+      document.getElementById('drawer').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
