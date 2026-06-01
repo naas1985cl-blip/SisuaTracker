@@ -1,0 +1,28 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "FUNCTIONS_EXTENSION_VERSION": "~4",
+
+    "// Local DB connection (in Azure this is fetched from Key Vault instead)": "",
+    "DB_CONNECTION_STRING": "postgres://pgadmin:PASSWORD@localhost:5432/projecttracker?sslmode=disable",
+
+    "// External API tokens (in Azure these live in Key Vault)": "",
+    "PIPEDRIVE_TOKEN": "your-pipedrive-api-token",
+    "CLICKUP_TOKEN": "your-clickup-api-token",
+    "CLICKUP_TEAM_ID": "your-clickup-team-id",
+
+    "// Set KEY_VAULT_URI in Azure to enable Managed-Identity secret fetch": "",
+    "KEY_VAULT_URI": "",
+
+    "APPLICATIONINSIGHTS_CONNECTION_STRING": "",
+
+    "// Comma-separated origins allowed by the read API (the SWA hostname)": "",
+    "ALLOWED_ORIGIN": "http://localhost:5173"
+  },
+  "Host": {
+    "CORS": "*",
+    "CORSCredentials": false
+  }
+}

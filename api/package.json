@@ -1,0 +1,26 @@
+{
+  "name": "project-tracker-api",
+  "version": "1.0.0",
+  "description": "Azure Functions (v4 isolated model) — weekly sync + read API for the Project Tracking Dashboard",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "clean": "rimraf dist",
+    "prestart": "npm run clean && npm run build",
+    "start": "func start",
+    "test": "echo \"no tests\" && exit 0"
+  },
+  "dependencies": {
+    "@azure/functions": "^4.5.0",
+    "@azure/identity": "^4.4.1",
+    "@azure/keyvault-secrets": "^4.8.0",
+    "pg": "^8.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/pg": "^8.11.6",
+    "rimraf": "^5.0.7",
+    "typescript": "^5.5.0"
+  }
+}

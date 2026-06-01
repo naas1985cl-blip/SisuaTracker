@@ -1,0 +1,118 @@
+:root {
+  --bg: #f4f6f8;
+  --card: #ffffff;
+  --border: #e3e8ee;
+  --text: #1f2933;
+  --muted: #6b7280;
+  --green: #1f9d55;
+  --amber: #d97706;
+  --red: #dc2626;
+  --accent: #2563eb;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+}
+
+header.topbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+header.topbar h1 { font-size: 22px; margin: 0; }
+header.topbar .sub { color: var(--muted); font-size: 13px; }
+
+.section { margin-top: 28px; }
+.section h2 { font-size: 15px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 0 0 12px; }
+
+/* KPI strip */
+.kpi-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.kpi-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+.kpi-card .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+.kpi-card .value { font-size: 26px; font-weight: 700; margin-top: 6px; }
+.kpi-card .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+/* Cards / tables */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+th { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+tr:last-child td { border-bottom: none; }
+tbody tr.clickable { cursor: pointer; }
+tbody tr.clickable:hover { background: #f9fafb; }
+
+/* Health */
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+.dot.green { background: var(--green); }
+.dot.amber { background: var(--amber); }
+.dot.red { background: var(--red); }
+
+/* Burn bar */
+.burn { background: #eef1f5; border-radius: 6px; height: 10px; width: 140px; overflow: hidden; }
+.burn > span { display: block; height: 100%; border-radius: 6px; }
+.burn .green { background: var(--green); }
+.burn .amber { background: var(--amber); }
+.burn .red { background: var(--red); }
+
+/* Status chips */
+.chip { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.chip.missing { background: #fef2f2; color: var(--red); }
+.chip.overdue { background: #fff7ed; color: var(--amber); }
+.chip.pending { background: #eff6ff; color: var(--accent); }
+.chip.ok { background: #ecfdf5; color: var(--green); }
+
+/* Revenue chart */
+.revchart { display: flex; align-items: flex-end; gap: 18px; height: 200px; padding: 16px; }
+.revbar { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+.revbar .bars { display: flex; align-items: flex-end; gap: 4px; height: 150px; }
+.revbar .bars > span { width: 18px; border-radius: 4px 4px 0 0; }
+.revbar .bars .rec { background: var(--accent); }
+.revbar .bars .inv { background: var(--green); }
+.revbar .month { font-size: 12px; color: var(--muted); }
+
+.legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); padding: 0 16px 12px; }
+.legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: middle; }
+
+.muted { color: var(--muted); }
+.right { text-align: right; }
+.loading, .empty { padding: 24px; color: var(--muted); }
+.error { padding: 16px; background: #fef2f2; color: var(--red); border-radius: 8px; }
+
+/* Drawer for week-over-week */
+.drawer-backdrop {
+  position: fixed; inset: 0; background: rgba(15, 23, 42, .35);
+  display: flex; justify-content: flex-end; z-index: 50;
+}
+.drawer {
+  width: min(560px, 100%); height: 100%; background: var(--card);
+  padding: 24px; overflow-y: auto; box-shadow: -4px 0 16px rgba(0,0,0,.12);
+}
+.drawer header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.drawer header button { border: none; background: none; font-size: 22px; cursor: pointer; color: var(--muted); }
+.delta-up { color: var(--green); }
+.delta-down { color: var(--red); }
